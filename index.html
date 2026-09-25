@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Event Usher – CBE</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <style>
     body { overscroll-behavior: none; }
     .scrollbar-thin::-webkit-scrollbar { width: 4px; }
@@ -20,7 +19,7 @@
       <div class="flex items-center justify-between gap-3">
         <div>
           <h1 class="text-lg font-bold tracking-tight">Event Usher</h1>
-          <p class="text-indigo-200 text-xs">CBE Payment Reader</p>
+          <p class="text-indigo-200 text-xs">CBE Fast Entry</p>
         </div>
         <div class="flex items-center gap-2">
           <label class="text-xs text-indigo-200 whitespace-nowrap">Price / Person</label>
@@ -52,25 +51,14 @@
     <!-- UPLOAD + FORM -->
     <section class="p-4 space-y-4 border-b">
       <div class="space-y-2">
-        <label class="block text-sm font-semibold text-slate-700">CBE Payment Screenshot</label>
+        <label class="block text-sm font-semibold text-slate-700">CBE Screenshot</label>
         <label for="fileInput"
-          class="flex flex-col items-center justify-center w-full h-36 border-2 border-dashed border-indigo-300 rounded-xl bg-indigo-50 hover:bg-indigo-100 active:bg-indigo-200 transition cursor-pointer relative">
+          class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-indigo-300 rounded-xl bg-indigo-50 active:bg-indigo-100 transition cursor-pointer">
           <div id="uploadPrompt" class="text-center px-4">
-            <svg class="mx-auto h-8 w-8 text-indigo-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <p class="text-sm font-medium text-indigo-700">Upload or Take Photo</p>
-            <p class="text-xs text-indigo-500 mt-0.5">CBE success screen</p>
+            <p class="text-sm font-medium text-indigo-700">📷 Take / Upload Photo</p>
+            <p class="text-xs text-indigo-500 mt-1">Then type TX ID + Amount</p>
           </div>
-          <img id="previewImg" class="hidden max-h-32 rounded-lg object-contain" alt="Preview" />
-          <!-- Loading overlay -->
-          <div id="ocrLoading" class="hidden absolute inset-0 bg-indigo-900/80 rounded-xl flex flex-col items-center justify-center text-white">
-            <div class="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin mb-2"></div>
-            <p class="text-sm font-medium">Reading CBE receipt...</p>
-            <p class="text-xs opacity-80">Usually 3–8 seconds</p>
-          </div>
+          <img id="previewImg" class="hidden max-h-28 rounded-lg object-contain" alt="Preview" />
         </label>
         <input id="fileInput" type="file" accept="image/*" capture="environment" class="hidden" />
       </div>
@@ -78,32 +66,32 @@
       <div class="space-y-3">
         <div>
           <label class="block text-xs font-medium text-slate-500 mb-1">Transaction ID</label>
-          <input id="txIdInput" type="text" placeholder="FT26263YXOLX"
-            class="w-full px-3 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-mono" />
+          <input id="txIdInput" type="text" placeholder="FT26263YXOLX" autocomplete="off"
+            class="w-full px-3 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base font-mono" />
         </div>
 
         <div>
-          <label class="block text-xs font-medium text-slate-500 mb-1">Amount Paid (Birr)</label>
-          <input id="amountInput" type="number" min="0" step="50" placeholder="2400"
-            class="w-full px-3 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm" />
+          <label class="block text-xs font-medium text-slate-500 mb-1">Amount (Birr)</label>
+          <input id="amountInput" type="number" min="0" step="50" placeholder="2400" inputmode="numeric"
+            class="w-full px-3 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base" />
         </div>
 
         <div>
           <label class="block text-xs font-medium text-slate-500 mb-1">Guest Count</label>
           <div class="flex items-center gap-3">
             <button id="minusBtn" type="button"
-              class="w-11 h-11 rounded-full bg-slate-200 hover:bg-slate-300 active:bg-slate-400 text-xl font-bold flex items-center justify-center transition">−</button>
-            <input id="guestInput" type="number" min="1" value="1"
-              class="flex-1 text-center text-xl font-bold py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              class="w-12 h-12 rounded-full bg-slate-200 active:bg-slate-400 text-2xl font-bold flex items-center justify-center">−</button>
+            <input id="guestInput" type="number" min="1" value="1" inputmode="numeric"
+              class="flex-1 text-center text-2xl font-bold py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
             <button id="plusBtn" type="button"
-              class="w-11 h-11 rounded-full bg-slate-200 hover:bg-slate-300 active:bg-slate-400 text-xl font-bold flex items-center justify-center transition">+</button>
+              class="w-12 h-12 rounded-full bg-slate-200 active:bg-slate-400 text-2xl font-bold flex items-center justify-center">+</button>
           </div>
           <p id="calcHint" class="text-xs text-slate-400 mt-1 text-center"></p>
         </div>
       </div>
 
       <button id="confirmBtn"
-        class="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-semibold text-base shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed"
+        class="w-full py-4 rounded-xl bg-emerald-600 active:bg-emerald-800 text-white font-bold text-lg shadow-md transition disabled:opacity-40 disabled:cursor-not-allowed"
         disabled>
         Confirm & Admit
       </button>
@@ -116,15 +104,15 @@
         <span id="logCount" class="text-xs bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full">0</span>
       </h2>
       <div id="timeline" class="space-y-3"></div>
-      <p id="emptyState" class="text-center text-slate-400 text-sm py-10">
-        No entries yet. Upload a CBE payment screenshot to start.
+      <p id="emptyState" class="text-center text-slate-400 text-sm py-8">
+        No entries yet
       </p>
     </section>
   </div>
 
   <!-- Modal -->
   <div id="modal" class="fixed inset-0 z-50 hidden bg-black/80 flex items-center justify-center p-4" onclick="closeModal()">
-    <img id="modalImg" class="max-w-full max-h-full rounded-lg shadow-2xl" alt="Full size" />
+    <img id="modalImg" class="max-w-full max-h-full rounded-lg" alt="Full size" />
   </div>
 
   <script>
@@ -132,12 +120,10 @@
     let currentImage = null;
     let entries = [];
 
-    // DOM
     const priceInput   = document.getElementById('priceInput');
     const fileInput    = document.getElementById('fileInput');
     const previewImg   = document.getElementById('previewImg');
     const uploadPrompt = document.getElementById('uploadPrompt');
-    const ocrLoading   = document.getElementById('ocrLoading');
     const txIdInput    = document.getElementById('txIdInput');
     const amountInput  = document.getElementById('amountInput');
     const guestInput   = document.getElementById('guestInput');
@@ -155,7 +141,6 @@
     const modal        = document.getElementById('modal');
     const modalImg     = document.getElementById('modalImg');
 
-    // ========== STORAGE ==========
     function loadState() {
       try {
         const saved = localStorage.getItem('eventUsherCBE');
@@ -165,92 +150,37 @@
           entries = data.entries || [];
           priceInput.value = pricePerPerson;
         }
-      } catch (e) {
-        console.warn('Load failed', e);
-        entries = [];
-      }
+      } catch (e) { entries = []; }
       render();
     }
 
     function saveState() {
       try {
-        localStorage.setItem('eventUsherCBE', JSON.stringify({
-          pricePerPerson,
-          entries
-        }));
+        localStorage.setItem('eventUsherCBE', JSON.stringify({ pricePerPerson, entries }));
       } catch (e) {
-        console.error('Save failed', e);
-        alert('Storage almost full. Consider resetting old data.');
+        alert('Storage full. Reset data if needed.');
       }
     }
 
-    function compressImage(dataUrl, maxWidth = 400, quality = 0.5) {
+    function compressImage(dataUrl) {
       return new Promise((resolve) => {
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
+          const max = 380;
           let w = img.width, h = img.height;
-          if (w > maxWidth) {
-            h = Math.round((h * maxWidth) / w);
-            w = maxWidth;
-          }
-          canvas.width = w;
-          canvas.height = h;
+          if (w > max) { h = Math.round(h * max / w); w = max; }
+          canvas.width = w; canvas.height = h;
           canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-          resolve(canvas.toDataURL('image/jpeg', quality));
+          resolve(canvas.toDataURL('image/jpeg', 0.45));
         };
         img.src = dataUrl;
       });
     }
 
-    // ========== CBE PARSER ==========
-    async function parseCBEReceipt(imageDataUrl) {
-      ocrLoading.classList.remove('hidden');
-      try {
-        const worker = await Tesseract.createWorker('eng');
-        const { data: { text } } = await worker.recognize(imageDataUrl);
-        await worker.terminate();
-
-        console.log('OCR Text:', text); // useful for debugging
-
-        // Transaction ID – CBE format usually starts with FT
-        let txId = '';
-        const ftMatch = text.match(/FT[0-9A-Z]{8,16}/i);
-        if (ftMatch) {
-          txId = ftMatch[0].toUpperCase();
-        } else {
-          const idMatch = text.match(/Transaction\s*ID[:\s]*([A-Z0-9]+)/i);
-          if (idMatch) txId = idMatch[1].toUpperCase();
-        }
-
-        // Amount – look for all ETB amounts and pick the main one
-        const amountMatches = [...text.matchAll(/ETB\s*([\d,]+\.?\d*)/gi)];
-        let amounts = amountMatches.map(m => parseFloat(m[1].replace(/,/g, '')));
-        amounts = amounts.filter(a => a >= 50); // ignore tiny fees
-
-        // Prefer the largest clean amount (usually the transfer amount)
-        let amount = 0;
-        if (amounts.length) {
-          // Prefer amounts that look like whole numbers or .00
-          const clean = amounts.filter(a => a === Math.round(a) || a % 1 === 0);
-          amount = clean.length ? Math.max(...clean) : Math.max(...amounts);
-        }
-
-        return { txId, amount };
-      } catch (err) {
-        console.error('OCR failed', err);
-        return { txId: '', amount: 0 };
-      } finally {
-        ocrLoading.classList.add('hidden');
-      }
-    }
-
-    // ========== HELPERS ==========
     function formatMoney(n) {
       return new Intl.NumberFormat('en-ET', {
-        style: 'currency',
-        currency: 'ETB',
-        maximumFractionDigits: 0
+        style: 'currency', currency: 'ETB', maximumFractionDigits: 0
       }).format(n).replace('ETB', 'Br');
     }
 
@@ -261,20 +191,18 @@
     function updateCalcHint() {
       const amount = Number(amountInput.value) || 0;
       const calc = pricePerPerson > 0 ? Math.round(amount / pricePerPerson) : 0;
-      calcHint.textContent = amount
-        ? `Auto-calc: ${amount} Br ÷ ${pricePerPerson} ≈ ${calc} people`
-        : '';
+      calcHint.textContent = amount ? `${amount} Br ÷ ${pricePerPerson} = ${calc} people` : '';
     }
 
     function updateConfirmState() {
-      const ok = currentImage &&
-                 txIdInput.value.trim().length > 4 &&
-                 Number(amountInput.value) > 0 &&
-                 Number(guestInput.value) > 0;
-      confirmBtn.disabled = !ok;
+      confirmBtn.disabled = !(
+        currentImage &&
+        txIdInput.value.trim().length > 4 &&
+        Number(amountInput.value) > 0 &&
+        Number(guestInput.value) > 0
+      );
     }
 
-    // ========== RENDER ==========
     function renderDashboard() {
       const revenue = entries.reduce((s, e) => s + e.amount, 0);
       const people  = entries.reduce((s, e) => s + e.guestCount, 0);
@@ -291,24 +219,22 @@
         return;
       }
       emptyState.classList.add('hidden');
-
       const sorted = [...entries].sort((a, b) => b.timestamp - a.timestamp);
-      timeline.innerHTML = sorted.map(entry => `
+      timeline.innerHTML = sorted.map(e => `
         <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-sm flex gap-3">
-          <img src="${entry.image}"
-               class="w-14 h-14 rounded-lg object-cover flex-shrink-0 cursor-pointer border border-slate-100"
-               onclick="openModal('${entry.image}')" alt="Screenshot" />
+          <img src="${e.image}" class="w-14 h-14 rounded-lg object-cover flex-shrink-0 cursor-pointer"
+               onclick="openModal('${e.image}')" alt="" />
           <div class="flex-1 min-w-0">
-            <div class="flex items-start justify-between gap-2">
+            <div class="flex justify-between gap-2">
               <div>
-                <p class="text-xs text-slate-400">${formatTime(entry.timestamp)}</p>
-                <p class="font-mono text-sm font-medium text-slate-700 truncate">${entry.txId}</p>
+                <p class="text-xs text-slate-400">${formatTime(e.timestamp)}</p>
+                <p class="font-mono text-sm font-medium truncate">${e.txId}</p>
               </div>
-              <span class="inline-flex items-center gap-1 bg-indigo-100 text-indigo-700 text-xs font-semibold px-2 py-1 rounded-full whitespace-nowrap">
-                🎟️ ${entry.guestCount} ${entry.guestCount === 1 ? 'Person' : 'People'}
+              <span class="bg-indigo-100 text-indigo-700 text-xs font-semibold px-2 py-1 rounded-full whitespace-nowrap">
+                🎟️ ${e.guestCount}
               </span>
             </div>
-            <p class="text-sm font-semibold text-emerald-600 mt-1">${formatMoney(entry.amount)}</p>
+            <p class="text-sm font-semibold text-emerald-600 mt-1">${formatMoney(e.amount)}</p>
           </div>
         </div>
       `).join('');
@@ -319,7 +245,7 @@
       renderTimeline();
     }
 
-    // ========== EVENTS ==========
+    // Events
     priceInput.addEventListener('input', () => {
       pricePerPerson = Math.max(1, Number(priceInput.value) || 1000);
       updateCalcHint();
@@ -329,25 +255,14 @@
     fileInput.addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = async (ev) => {
-        // Show preview immediately
         currentImage = await compressImage(ev.target.result);
         previewImg.src = currentImage;
         previewImg.classList.remove('hidden');
         uploadPrompt.classList.add('hidden');
-
-        // Run OCR
-        const { txId, amount } = await parseCBEReceipt(ev.target.result);
-
-        if (txId) txIdInput.value = txId;
-        if (amount > 0) {
-          amountInput.value = Math.round(amount); // CBE usually whole Birr
-          guestInput.value = Math.max(1, Math.round(amount / pricePerPerson));
-        }
-
-        updateCalcHint();
+        // Auto-focus the TX ID field so you can start typing immediately
+        setTimeout(() => txIdInput.focus(), 100);
         updateConfirmState();
       };
       reader.readAsDataURL(file);
@@ -377,20 +292,18 @@
     confirmBtn.addEventListener('click', () => {
       if (confirmBtn.disabled) return;
 
-      const entry = {
-        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      entries.push({
+        id: Date.now().toString(36),
         timestamp: Date.now(),
-        txId: txIdInput.value.trim(),
+        txId: txIdInput.value.trim().toUpperCase(),
         amount: Number(amountInput.value),
         guestCount: Number(guestInput.value),
         image: currentImage
-      };
-
-      entries.push(entry);
+      });
       saveState();
       render();
 
-      // Reset
+      // Reset form fast
       currentImage = null;
       previewImg.src = '';
       previewImg.classList.add('hidden');
@@ -402,12 +315,12 @@
       calcHint.textContent = '';
       updateConfirmState();
 
-      confirmBtn.textContent = '✓ Admitted!';
-      setTimeout(() => confirmBtn.textContent = 'Confirm & Admit', 900);
+      confirmBtn.textContent = '✓ Admitted';
+      setTimeout(() => confirmBtn.textContent = 'Confirm & Admit', 700);
     });
 
     resetBtn.addEventListener('click', () => {
-      if (!confirm('Clear all entries and reset price to 1000 Br?')) return;
+      if (!confirm('Clear everything?')) return;
       entries = [];
       pricePerPerson = 1000;
       priceInput.value = 1000;
@@ -425,16 +338,9 @@
       render();
     });
 
-    window.openModal = (src) => {
-      modalImg.src = src;
-      modal.classList.remove('hidden');
-    };
-    window.closeModal = () => {
-      modal.classList.add('hidden');
-      modalImg.src = '';
-    };
+    window.openModal = (src) => { modalImg.src = src; modal.classList.remove('hidden'); };
+    window.closeModal = () => { modal.classList.add('hidden'); modalImg.src = ''; };
 
-    // INIT
     loadState();
     updateConfirmState();
   </script>
